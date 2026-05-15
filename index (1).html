@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ian Peixoto — AI Automation Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #00e5a0;
+      --accent2: #00b3ff;
+      --text: #f0f0f0;
+      --muted: #666;
+      --card: #141414;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* GRID BACKGROUND */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.2);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 2px;
+      margin-bottom: 40px;
+      width: fit-content;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 32px;
+    }
+
+    .hero h1 span {
+      display: block;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--accent);
+      letter-spacing: -1px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* EXPERIENCE */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+
+    .exp-meta {
+      padding-top: 4px;
+    }
+
+    .exp-company {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .exp-period {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .exp-location {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .exp-role {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .exp-desc {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .exp-automations {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .automation-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 12px;
+      color: #aaa;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .automation-item:hover {
+      border-color: rgba(0,229,160,0.3);
+      color: var(--text);
+    }
+
+    .automation-item::before {
+      content: '→';
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .exp-impact {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      background: rgba(0,229,160,0.06);
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 2px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    /* CLIENTS GRID */
+    .clients-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .client-card {
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .client-card:hover {
+      border-color: rgba(0,229,160,0.3);
+      transform: translateY(-2px);
+    }
+
+    .client-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .client-niche {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .stack-item {
+      padding: 10px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .stack-item:hover {
+      border-color: rgba(0,179,255,0.4);
+      color: var(--accent2);
+    }
+
+    /* APPROACH */
+    .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .approach-item {
+      background: var(--card);
+      padding: 32px;
+    }
+
+    .approach-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 40px;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .approach-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .approach-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-info {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .footer-right {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.6s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-tag { animation-delay: 0.1s; }
+    .hero h1 { animation: fadeIn 0.6s 0.2s forwards; opacity: 0; transform: translateY(20px); }
+    .hero-sub { animation: fadeIn 0.6s 0.35s forwards; opacity: 0; transform: translateY(20px); }
+    .hero-stats { animation: fadeIn 0.6s 0.5s forwards; opacity: 0; transform: translateY(20px); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      section { padding: 60px 24px; }
+      .exp-item { grid-template-columns: 1fr; gap: 16px; }
+      .approach-grid { grid-template-columns: 1fr; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Ian Peixoto</div>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#approach">Approach</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag fade-in">Available for Remote / US Companies</div>
+  <h1>
+    AI Automation<br/>
+    <span>Developer.</span>
+  </h1>
+  <p class="hero-sub">
+    Building production-grade AI-powered workflows and automation systems for US companies and high-profile digital businesses. N8N · Claude API · Zapier · Make · Agentic Systems.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-value">$8M+</div>
+      <div class="stat-label">Revenue Impact</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">3+</div>
+      <div class="stat-label">Years Building</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">13+</div>
+      <div class="stat-label">Clients Served</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2,000+</div>
+      <div class="stat-label">Automations Shipped</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Experience</div>
+
+  <!-- Remote Leverage -->
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-company">Remote Leverage</div>
+      <div class="exp-period">Mar 2026 – Present</div>
+      <div class="exp-location">US · Remote</div>
+    </div>
+    <div>
+      <div class="exp-role">AI Automation Senior Developer</div>
+      <div class="exp-desc">Internal automation developer building AI-powered workflows across the company's full operations stack — from recruiting and payments to marketing and customer service.</div>
+      <div class="exp-automations">
+        <div class="automation-item">AI-powered Meta ad comment moderation (Instagram & Facebook) — N8N + Claude API pipeline that automatically hides negative/spam comments on ads, protecting ad deliverability and brand image, while routing ambiguous cases to Slack for human approval</div>
+        <div class="automation-item">AI comment question detection — every ad/Reel comment analyzed by Claude API to identify genuine questions, instantly routed to the marketing team via Slack for fast conversion</div>
+        <div class="automation-item">QuickBooks payment tracker — QBO webhooks → N8N → Google Sheets → Slack with in-place message updates, OAuth2 management and duplicate deduplication</div>
+        <div class="automation-item">Stripe refund & chargeback notification system — Recruit CRM lookups, Slack @mention routing by hiring manager, cascading fallback logic</div>
+        <div class="automation-item">Sales team email automation — fully automated all manual outbound emails, eliminating repetitive work and ensuring consistent communication</div>
+        <div class="automation-item">AI-powered customer service chatbot — handles common inquiries, qualifies leads, routes complex cases to human agents</div>
+        <div class="automation-item">Chargeback tracking & stage management — real-time Slack notifications at every dispute stage</div>
+        <div class="automation-item">Calendly → Recruit CRM workflow — auto-updates custom job-record fields on candidate bookings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assaad -->
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-company">Assaad Educação</div>
+      <div class="exp-period">Jan – Apr 2026</div>
+      <div class="exp-location">Brazil · Remote</div>
+    </div>
+    <div>
+      <div class="exp-role">Senior Automation Developer</div>
+      <div class="exp-desc">Educational platform serving Brazil's top exam-prep audience. 295K followers. Contributed to ~$6M USD in platform revenue.</div>
+      <div class="exp-automations">
+        <div class="automation-item">AI-powered student Q&A blog automation — N8N + Claude API pipeline that autonomously analyzed, solved, and published 2,000+ student questions to WordPress with zero manual intervention</div>
+        <div class="automation-item">Full-funnel lead capture → nurture → conversion automations across CRM, email and WhatsApp</div>
+        <div class="automation-item">WhatsApp lead generation flows, diagnostic quiz funnels, and CRM enrichment workflows</div>
+      </div>
+      <div class="exp-impact">~$6M USD in platform revenue supported</div>
+    </div>
+  </div>
+
+  <!-- Megafone -->
+  <div class="exp-item">
+    <div class="exp-meta">
+      <div class="exp-company">Megafone Digital</div>
+      <div class="exp-period">Jan – Sep 2025</div>
+      <div class="exp-location">Brazil · Remote</div>
+    </div>
+    <div>
+      <div class="exp-role">Automation Developer</div>
+      <div class="exp-desc">Top 15 Hotmart global agency. Owned and managed the entire marketing automation infrastructure — architecting, building, and maintaining all workflows across CRM, email, WhatsApp, Instagram, and paid media operations.</div>
+      <div class="exp-automations">
+        <div class="automation-item">Full marketing automation stack — CRM pipelines, email sequences, WhatsApp campaigns, Instagram integrations, and paid media workflows</div>
+        <div class="automation-item">Complex backend debugging across CRM pipelines, form submissions, and multi-step N8N workflows under high-load launch conditions</div>
+        <div class="automation-item">Supported launches generating ~R$10M in revenue across multiple product campaigns</div>
+      </div>
+      <div class="exp-impact">~R$10M in launch revenue supported</div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div class="section-label">Notable Clients</div>
+  <div class="clients-grid">
+    <div class="client-card">
+      <div class="client-name">Chef Marcelo Horta</div>
+      <div class="client-niche">Food & Lifestyle · 1.1M followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Luciana Papini</div>
+      <div class="client-niche">Automation Educator · 357K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Flávia Peixoto</div>
+      <div class="client-niche">Parenting & Motherhood · 438M followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Camila Mairaa</div>
+      <div class="client-niche">Fashion & Lifestyle · 251K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Gringa Brasileira</div>
+      <div class="client-niche">English Education · 896K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Edra Schulze</div>
+      <div class="client-niche">Fashion & Sewing · 291K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Julio Mulati</div>
+      <div class="client-niche">Business & Sales · 47.6K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Megafone Digital</div>
+      <div class="client-niche">Top 15 Hotmart Agency · 11.7M reach</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Renato Ribeiro</div>
+      <div class="client-niche">Communication & Storytelling · 32.4M followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Teacher Elza</div>
+      <div class="client-niche">English Education · 2.2M followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Débora Libras</div>
+      <div class="client-niche">Sign Language Education · 542K followers</div>
+    </div>
+    <div class="client-card">
+      <div class="client-name">Carol Newman</div>
+      <div class="client-niche">Oratory & Speaking · 165K followers</div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="section-label">Technical Stack</div>
+  <div class="stack-grid">
+    <div class="stack-item">N8N</div>
+    <div class="stack-item">Zapier</div>
+    <div class="stack-item">Make</div>
+    <div class="stack-item">Claude API</div>
+    <div class="stack-item">OpenAI API</div>
+    <div class="stack-item">Claude Code</div>
+    <div class="stack-item">Cursor</div>
+    <div class="stack-item">Meta Graph API</div>
+    <div class="stack-item">Stripe API</div>
+    <div class="stack-item">QuickBooks API</div>
+    <div class="stack-item">Slack API</div>
+    <div class="stack-item">WhatsApp API</div>
+    <div class="stack-item">Recruit CRM</div>
+    <div class="stack-item">HubSpot</div>
+    <div class="stack-item">Supabase</div>
+    <div class="stack-item">Google Sheets</div>
+    <div class="stack-item">WordPress API</div>
+    <div class="stack-item">SendGrid</div>
+    <div class="stack-item">ManyChat</div>
+    <div class="stack-item">OAuth 2.0</div>
+    <div class="stack-item">REST APIs</div>
+    <div class="stack-item">Webhooks</div>
+    <div class="stack-item">JavaScript</div>
+    <div class="stack-item">Python</div>
+    <div class="stack-item">Prompt Engineering</div>
+    <div class="stack-item">Agentic Systems</div>
+    <div class="stack-item">RAG</div>
+    <div class="stack-item">MCP Protocol</div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="section-label">How I Work</div>
+  <div class="approach-grid">
+    <div class="approach-item">
+      <div class="approach-num">01</div>
+      <div class="approach-title">Map First, Build Second</div>
+      <div class="approach-desc">Every engagement starts with process mapping sessions — walking through daily operations with the team to surface bottlenecks and manual repetition before writing a single line of automation.</div>
+    </div>
+    <div class="approach-item">
+      <div class="approach-num">02</div>
+      <div class="approach-title">AI as the Intelligence Layer</div>
+      <div class="approach-desc">I use Claude API as the judgment layer inside automations — handling anything that requires contextual reasoning, classification, or content generation that rules alone can't solve reliably.</div>
+    </div>
+    <div class="approach-item">
+      <div class="approach-num">03</div>
+      <div class="approach-title">Problem-Solver First</div>
+      <div class="approach-desc">When I hit something outside my current knowledge, I use AI to close that gap fast and keep moving. This multiplies my problem-solving surface area far beyond any fixed technical background.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-name">Ian Peixoto</div>
+    <div class="footer-info">Petrópolis, Brazil · GMT-3 · English C1 · Open to Remote / US</div>
+  </div>
+  <div class="footer-right">
+    AI Automation Developer<br/>
+    N8N · Claude API · Zapier · Make
+  </div>
+</footer>
+
+</body>
+</html>
