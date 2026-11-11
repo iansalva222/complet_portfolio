@@ -241,6 +241,8 @@
       letter-spacing: 0.05em;
     }
 
+    .exp-item:last-child { margin-bottom: 0; }
+
     .exp-location {
       font-size: 11px;
       color: var(--muted);
@@ -466,6 +468,7 @@
 <nav>
   <div class="nav-logo">Ian Peixoto</div>
   <ul class="nav-links">
+    <li><a href="#freelance">Freelance</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#clients">Clients</a></li>
     <li><a href="#stack">Stack</a></li>
@@ -486,11 +489,11 @@
   </p>
   <div class="hero-stats">
     <div class="stat">
-      <div class="stat-value">$8M+</div>
+      <div class="stat-value">$15M+</div>
       <div class="stat-label">Revenue Impact</div>
     </div>
     <div class="stat">
-      <div class="stat-value">3+</div>
+      <div class="stat-value">4+</div>
       <div class="stat-label">Years Building</div>
     </div>
     <div class="stat">
@@ -504,9 +507,9 @@
   </div>
 </div>
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="section-label">Experience</div>
+<!-- FREELANCE PROJECTS -->
+<section id="freelance">
+  <div class="section-label">Freelance Projects</div>
 
   <!-- Black Fox Lending -->
   <div class="exp-item">
@@ -519,6 +522,8 @@
       <div class="exp-role">AI Ops Lead &amp; Software Engineer</div>
       <div class="exp-desc">US real estate lending company. I own the company's entire technology side and I'm building its operating system from scratch: AI agents, internal software and the automations that connect sales, underwriting and client communication.</div>
       <div class="exp-automations">
+        <div class="automation-item">AI property photo app — app with built-in AI that photographs each house in real time and runs AI analysis on the images as they're captured</div>
+        <div class="automation-item">Marketing AI agents — agents that develop ads and posts, integrated via API so the content is published automatically</div>
         <div class="automation-item">AI rehab visualization software — generates renovation previews of each property with generative AI, used in the rehab package sent to borrowers</div>
         <div class="automation-item">GoHighLevel build-out — CRM pipelines, lead handling and follow-up automations set up for the whole sales operation</div>
         <div class="automation-item">Automated client delivery system (in progress) — sends each client an email with property photos, integrated with the Lendr lending platform and logging every send</div>
@@ -538,8 +543,8 @@
       <div class="exp-role">AI Engineer &amp; Full Stack Software Engineer</div>
       <div class="exp-desc">Multi-location med spa in the US. I build the company's AI agents and automations across marketing, CRM and clinic operations, connecting GoHighLevel, Zenoti and N8N.</div>
       <div class="exp-automations">
+        <div class="automation-item">Client retention dashboard — complete dashboard (Zenoti + Supabase + N8N) that gives full control over every lead's data, with built-in AI analysis and a wide range of features, running at 100% data accuracy</div>
         <div class="automation-item">Generative AI creative platform — software that produces images and videos by orchestrating 5+ generative AI models, fed with Novuskin's brand context and content guidelines so every output comes out on-brand</div>
-        <div class="automation-item">Real-time company dashboard — full stack app that pulls live business data and has AI built in to answer questions about the numbers</div>
         <div class="automation-item">Daily revenue report — automated report that combines Zenoti revenue and Meta Ads performance and delivers it to leadership every day</div>
         <div class="automation-item">GoHighLevel CRM efficiency agent — AI agent that reviews the entire CRM and reports where the pipeline and lead handling are losing efficiency</div>
         <div class="automation-item">Zenoti operations agent — AI agent that fills 5+ Zenoti spreadsheets and runs the related back-office processes through N8N</div>
@@ -549,11 +554,17 @@
     </div>
   </div>
 
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Experience</div>
+
   <!-- Remote Leverage -->
   <div class="exp-item">
     <div class="exp-meta">
       <div class="exp-company">Remote Leverage</div>
-      <div class="exp-period">Mar – Aug 2026</div>
+      <div class="exp-period">Mar – Jul 2026</div>
       <div class="exp-location">US · Remote</div>
     </div>
     <div>
@@ -576,7 +587,7 @@
   <div class="exp-item">
     <div class="exp-meta">
       <div class="exp-company">Assaad Educação</div>
-      <div class="exp-period">Jan – Apr 2026</div>
+      <div class="exp-period">Jan – Mar 2026</div>
       <div class="exp-location">Brazil · Remote</div>
     </div>
     <div>
@@ -633,7 +644,7 @@
     </div>
     <div class="client-card">
       <div class="client-name">Flávia Peixoto</div>
-      <div class="client-niche">Parenting & Motherhood · 438M followers</div>
+      <div class="client-niche">Parenting & Motherhood</div>
     </div>
     <div class="client-card">
       <div class="client-name">Camila Mairaa</div>
